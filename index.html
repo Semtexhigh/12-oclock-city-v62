@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>12 O'Clock City</title><meta name="theme-color" content="#070a12">
+<style>html,body{margin:0;height:100%;background:#070a12;color:#f3f5f8;font:600 15px -apple-system,system-ui,"Segoe UI",Roboto,sans-serif}
+#ld{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center;background:radial-gradient(900px 600px at 50% 30%,rgba(255,178,26,.14),transparent),#070a12}
+#ld h1{margin:0;font:900 clamp(30px,7vw,54px) "Chakra Petch",-apple-system,sans-serif;letter-spacing:.08em;color:#ffb21a}#ld h1 small{display:block;font:600 12px -apple-system,sans-serif;letter-spacing:.32em;color:rgba(243,245,248,.55);margin-top:8px}
+#bar{width:min(420px,80vw);height:8px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}#bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff8a1a,#ffd60a);transition:width .2s}
+#st{color:rgba(243,245,248,.75);min-height:20px}#hint{color:rgba(243,245,248,.4);font-size:12px;max-width:420px;line-height:1.5}</style></head>
+<body><div id="ld"><h1>12 O'CLOCK CITY<small>DUBAI · OPEN WORLD</small></h1><div id="bar"><i></i></div><div id="st">Starting…</div><div id="hint"></div></div>
+<script>
+(function(){var APP='app.html?v=470dc2f2d8',BYTES=9809543;var bar=document.querySelector('#bar i'),st=document.getElementById('st'),hint=document.getElementById('hint');
+function set(p,t){bar.style.width=Math.round(p*100)+'%';st.textContent=t;}
+try{if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(function(){});}catch(e){}
+var first=false;try{first=!localStorage.getItem('12oc__cached');}catch(e){}
+if(first)hint.textContent='First visit: the city downloads once (about '+Math.round(BYTES/1e6)+' MB). After that it opens instantly.';
+fetch(APP).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);var total=+r.headers.get('content-length')||BYTES;if(!r.body||!r.body.getReader)return r.text();var rd=r.body.getReader(),got=0,parts=[];
+  function pump(){return rd.read().then(function(x){if(x.done)return;got+=x.value.length;parts.push(x.value);set(Math.min(.98,got/total),'Downloading city… '+Math.min(99,Math.round(got/total*100))+'%');return pump();});}
+  return pump().then(function(){var all=new Uint8Array(got),o=0;parts.forEach(function(p){all.set(p,o);o+=p.length;});return new TextDecoder('utf-8').decode(all);});})
+.then(function(html){set(1,'Building the city…');try{localStorage.setItem('12oc__cached','1');}catch(e){}setTimeout(function(){document.open();document.write(html);document.close();},30);})
+.catch(function(e){set(0,'Could not download the game. Check your connection and refresh.');hint.textContent=String(e&&e.message||e);});})();
+</script></body></html>
